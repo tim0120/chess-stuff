@@ -36,16 +36,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-// import got from 'got';
 var axios_1 = require("axios");
-console.log('hello');
-var usernames = ['tim0120', 'gmiller148', 'jmanyika', 'spencerlinbb', 'Akiva07', 'Dadd10', 'Rice_Cakes', 'CollinD727'];
-var stats = usernames.forEach(function (user) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+var usernames = ['tim012', 'gmiller148', 'jmanyika', 'spencerlinbb', 'Akiva07', 'Dadd10', 'Rice_Cakes', 'CollinD727'];
+function get_stats(username) {
+    return __awaiter(this, void 0, void 0, function () {
+        var stats;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, axios_1["default"].get("https://api.chess.com/pub/player/".concat(username, "/stats"))];
+                case 1:
+                    stats = _a.sent();
+                    if (stats.status == 200) {
+                        return [2 /*return*/, stats.data];
+                    }
+                    else {
+                        throw new Error('Invalid request');
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+var stats = usernames.map(function (username) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
     switch (_a.label) {
-        case 0: return [4 /*yield*/, axios_1["default"].get('https://api.chess.com/pub/player/${user}/stats')];
+        case 0: return [4 /*yield*/, get_stats(username)];
         case 1: return [2 /*return*/, _a.sent()];
     }
 }); }); });
-// console.log(stats);
-var tim_stats = axios_1["default"].get('https://api.chess.com/pub/player/tim012');
-// console.log(tim_stats);
+console.log(stats);

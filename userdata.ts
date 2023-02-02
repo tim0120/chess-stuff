@@ -1,14 +1,26 @@
-// import got from 'got';
 import axios from 'axios';
 
-console.log('hello');
-let usernames: string[] = ['tim0120', 'gmiller148', 'jmanyika', 'spencerlinbb', 'Akiva07', 'Dadd10', 'Rice_Cakes', 'CollinD727'];
+const usernames: string[] = ['tim012', 'gmiller148', 'jmanyika', 'spencerlinbb', 'Akiva07', 'Dadd10', 'Rice_Cakes', 'CollinD727'];
 
-let stats = usernames.forEach(
-  async (user) => await axios.get('https://api.chess.com/pub/player/${user}/stats')
-); 
+async function get_stats(username: string) {
+  const stats = await axios.get(`https://api.chess.com/pub/player/${username}/stats`);
+  if (stats.status == 200) {
+    // console.log(stats.data.chess_blitz);
+    return stats.data;
+  } else {
+    throw new Error('Invalid request');
+  }
+}
 
-// console.log(stats);
+async function main() {
+  const blitz_ratings = new Map<string, any>();
+  await usernames.forEach(
+    async (username) => {
+      const stats = await get_stats(username);
+      blitz_ratings.set(username, stats.chess_blitz.last.rating)
+    }
+  ); 
+  console.log(blitz_ratings);
+}
 
-const tim_stats = axios.get('https://api.chess.com/pub/player/tim012');
-// console.log(tim_stats);
+main();
