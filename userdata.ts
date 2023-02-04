@@ -3,12 +3,16 @@ import axios from 'axios';
 const usernames: string[] = ['tim012', 'gmiller148', 'jmanyika', 'spencerlinbb', 'Akiva07', 'Dadd10', 'Rice_Cakes', 'CollinD727'];
 
 async function get_stats(username: string) {
-  const stats = await axios.get(`https://api.chess.com/pub/player/${username}/stats`);
-  if (stats.status == 200) {
-    // console.log(stats.data.chess_blitz);
-    return stats.data;
-  } else {
-    throw new Error('Invalid request');
+  try {
+    const stats_endpoint = `https://api.chess.com/pub/player/${username}/stats`;
+    const stats = await axios.get(stats_endpoint);
+    if (stats.status == 200) {
+      return stats.data;
+    } else {
+      console.log(`request for ${username} gave status ${stats.status}`);
+    }
+  } catch (error) { 
+    console.log(`chess.com did not like the request for ${username}`);
   }
 }
 
@@ -19,8 +23,7 @@ async function main() {
       const stats = await get_stats(username);
       blitz_ratings.set(username, stats.chess_blitz.last.rating)
     }
-  ); 
-  console.log(blitz_ratings);
+  );
 }
 
 main();
